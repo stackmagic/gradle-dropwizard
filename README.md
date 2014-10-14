@@ -22,7 +22,7 @@ buildscript {
     }
 
     dependencies {
-        compile 'net.swisstech:gradle-dropwizard:1.0.0'
+        compile 'net.swisstech:gradle-dropwizard:+'
     }
 }
 ```
