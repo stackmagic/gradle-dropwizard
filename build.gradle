@@ -21,7 +21,7 @@ dependencies {
 	compile gradleApi()
 	compile localGroovy()
 
-	compile 'net.swisstech:swissarmyknife:1.0.0'
+	compile 'net.swisstech:swissarmyknife:1.0.1'
 	compile 'org.slf4j:slf4j-api:1.7.7'
 
 	runtime 'com.github.jengelman.gradle.plugins:shadow:1.1.2'
