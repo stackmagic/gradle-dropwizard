@@ -94,7 +94,7 @@ bintray {
 	publications = [ 'mavenJava' ]
 	pkg {
 		repo            = 'maven'
-		name            = "${project.group}_${project.name}"
+		name            = project.name
 		desc            = project.description
 		licenses        = [ 'Apache-2.0' ]
 		websiteUrl      = 'https://github.com/stackmagic/gradle-dropwizard'
