@@ -140,7 +140,6 @@ The above test would be located in `src/intTest/java/net/swisstech` and can be c
 todo
 ====
 
-* real parsing of the yml file to always supply a correct url
 * npn-boot jar version selector util
 * streamline the test task generation
 * make usage of testng vs. junit configurable
