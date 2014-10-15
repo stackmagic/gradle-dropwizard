@@ -12,7 +12,8 @@ import org.gradle.api.publish.maven.*
 
 import org.gradle.util.ConfigureUtil
 
-// TODO improve in process/port handline: check if the required ports are already used before starting and kill the other process in case it's a remnant of a previous run
+// TODO improve in process/port handline: check if the required ports are already used
+// before starting and kill the other process in case it's a remnant of a previous run
 
 /** adds integration tests to a dropwizard project */
 class DropwizardInttestPlugin implements Plugin<Project> {
@@ -48,11 +49,8 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 			project.plugins.getPlugin('dropwizard')
 			project.plugins.getPlugin('grakins_service')
 
-			// parse development.yml for ports
-			ext.dwPorts = file(dropwizard.dropwizardConfigFile) \
-				.readLines() \
-				.grep( ~/.*port:.*/ ) \
-				.collect { it.split(':')[1].split(',')[0].trim() } as Set
+			// parse development.yml for urls/ports
+			ext.dwConfig = DropwizardConfigLoader.parse(file(dropwizard.dropwizardConfigFile))
 
 			// the integration and acceptance test setups are identical, make them in a loop
 			// TODO factor all the port stuff out into a util and refine it
@@ -81,16 +79,10 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 					testClassesDir = sourceSets[taskName].output.classesDir
 					classpath      = sourceSets[taskName].runtimeClasspath
 
-					// TODO we should have an actual parser for the dropwizard
-					// config the convention at the moment is, that the lowest port
-					// number is the http application port!
-
-					// TODO we could have a real config parser and/or pass all info
-					// to the tests so a test could use the admin interface exposed
-					// by dropwizard to verify something has worked. yes these
-					// tests are supposed to be black box but I'd allow that.
-
-					systemProperty('DROPWIZARD_URL', "http://localhost:${dwPorts.min()}")
+					// add all urls parsed from the config to the environment
+					dwConfig.urls.each {
+						systemProperty(it.key, it.value)
+					}
 				}
 
 				// start dropwizard before the tests are run, we check and wait
@@ -103,31 +95,32 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 					def commandLine = tasks['dropwizardRun'].commandLine
 					Process process = ProcessUtil.launch(commandLine, projectDir)
 
-					Set<String> found   = [] as Set
-					long        start   = System.currentTimeMillis()
-					long        maxWait = start + 10000
-					int         pid     = process.pid
+					Set<Integer> found   = [] as Set
+					long         start   = System.currentTimeMillis()
+					long         maxWait = start + 10000
+					int          pid     = process.pid
 
-					if (dwPorts == null || dwPorts.isEmpty()) {
-						throw new InvalidUserDataException("Found no port definitions in ${dropwizardConfigFile}")
+					if (dwConfig.ports == null || dwConfig.ports.isEmpty()) {
+						throw new InvalidUserDataException("No port definitions found in ${dropwizardConfigFile}")
 					}
 
-					LOG.info("waiting until all of these ports are open: ${dwPorts}")
+					LOG.info("waiting until all of these ports are open: ${dwConfig.ports}")
 
 					// loop and sleep until all expected ports are open
 					while (true) {
-						for (String port : dwPorts) {
+						for (String port : dwConfig.ports) {
 							def foundPid = "lsof -t -i :${port}".execute().text.trim()
 							if (foundPid != null && foundPid.length() > 0) {
-								found << port
+								found << Integer.parseInt(port)
 							}
 							if (foundPid != null && !foundPid.isEmpty() && foundPid as int != pid) {
 								ProcessUtil.killAndWait(process)
-								throw new InvalidUserDataException("Ports are spread across multiple processes, bailing! Go check out that other process with pid ${foundPid}!")
+								throw new InvalidUserDataException("Ports are spread across multiple processes, bailing! Go check out that other process with pid: ${foundPid}!")
 							}
 						}
 
-						if (found.equals(dwPorts)) {
+						LOG.info("Open ports right now: ${found}")
+						if (found.containsAll(dwConfig.ports)) {
 							break
 						}
 
@@ -141,7 +134,7 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 
 						if (System.currentTimeMillis() > maxWait) {
 							ProcessUtil.killAndWait(process)
-							throw new InvalidUserDataException("Timeout while waiting for dropwizard to start")
+							throw new InvalidUserDataException("Timeout while waiting for dropwizard to start (was waiting for ports: ${dwConfig.ports})")
 						}
 
 						sleep(50)

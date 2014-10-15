@@ -36,13 +36,13 @@ this project contains 2 plugins
 Dropwizard
 ----------
 
-This plugin will add a 'dropwizardRun' task which is similar to 'jettyRun': it starts the server and blocks until interrupted via Ctrl-C.
-It will also add a 'shadowJar' task (reusing the plugin 'com.github.johnrengelman.shadow') to create a shaded jar with merged service files so
-the jar can be run with 'java -jar your.jar'.
+This plugin will add a `dropwizardRun` task which is similar to `jettyRun`: it starts the server and blocks until interrupted via Ctrl-C.
+It will also add a `shadowJar` task (reusing the plugin [com.github.johnrengelman.shadow](https://github.com/johnrengelman/shadow/))
+to create a shaded jar with merged service files so the jar can be run with `java -jar your.jar`.
 
-SPDY is supported, since this plugin adds the 'npn-boot' library to the boot classpath of the dropwizard instance being started. However,
-it only adds a fairly recent version of the 'npn-boot' library and not the one intended for your jdk (apparently npn-boot is picky about
-your jdk version).
+SPDY is supported, since this plugin adds the `npn-boot` library to the boot classpath of the dropwizard instance being started. However,
+this feature is not very well tested and it only adds a fairly recent version of the `npn-boot` library and not the one intended for your
+jdk (apparently npn-boot is picky about your jdk version).
 
 ```groovy
 apply plugin: 'dropwizard'
@@ -94,8 +94,18 @@ dropwizard_inttest {
 }
 ```
 
-Your actual test classes and resources then go into 'src/{int|acc}Test/{java|resources}'. The plugin will read your
-dropwizard yml config file and use the *lowest* port it can find to supply an url to your tests as an environment variable.
+Your actual test classes and resources then go into `src/{int|acc}Test/{java|resources}`.
+
+The plugin will read your dropwizard yaml config and parse/reconstruct the urls to access your app/admin.
+This information is added to your tests as a java system property. The available properties depend on your actual
+configuration. The maximum available properties are:
+
+* DROPWIZARD_APP_HTTP
+* DROPWIZARD_APP_HTTPS
+* DROPWIZARD_APP_SPDY3
+* DROPWIZARD_ADM_HTTP
+* DROPWIZARD_ADM_HTTPS
+* DROPWIZARD_ADM_SPDY3
 
 An example test to call the hello-world service from the dropwizard getting started project looks something like this:
 
@@ -115,7 +125,7 @@ import dwtest.model.Saying;
 public class SomeIntTest {
 
 	@Test
-	@Parameters("DROPWIZARD_URL")
+	@Parameters("DROPWIZARD_APP_HTTP")
 	public void test(String dwUrl) {
 		HelloWorld hw = HelloWorldClientFactory.newClient(dwUrl);
 		Saying saying = hw.sayHello("INTEGRATION");
@@ -124,6 +134,8 @@ public class SomeIntTest {
 	}
 }
 ```
+
+The above test would be located in `src/intTest/java/net/swisstech` and can be called trough `gradle intTest`.
 
 todo
 ====
