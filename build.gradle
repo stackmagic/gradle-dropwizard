@@ -23,6 +23,7 @@ dependencies {
 
 	compile 'net.swisstech:swissarmyknife:1.0.1'
 	compile 'org.slf4j:slf4j-api:1.7.7'
+	compile 'org.yaml:snakeyaml:1.14'
 
 	runtime 'com.github.jengelman.gradle.plugins:shadow:1.1.2'
 
@@ -31,7 +32,9 @@ dependencies {
 }
 
 // testing
-test.useTestNG()
+// DO NOT use testng or else the groovy test cases won't be executed
+// TODO use testng for groovy tests?
+// test.useTestNG()
 
 // TODO use eclipse-enhancer once it is published
 eclipseProject.doLast {
