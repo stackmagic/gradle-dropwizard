@@ -4,7 +4,7 @@ gradle-dropwizard
 
 Gradle plugin to start/stop dropwizard manually as well as part of a test task and build a runnable jar file
 
-<img src="https://travis-ci.org/stackmagic/gradle-dropwizard.svg?branch=master" />
+[ ![TravicCI](https://travis-ci.org/stackmagic/gradle-dropwizard.svg?branch=master) ](https://travis-ci.org/stackmagic/gradle-dropwizard)
 [ ![Download](https://api.bintray.com/packages/stackmagic/maven/gradle-dropwizard/images/download.svg) ](https://bintray.com/stackmagic/maven/gradle-dropwizard/_latestVersion)
 
 downloading
