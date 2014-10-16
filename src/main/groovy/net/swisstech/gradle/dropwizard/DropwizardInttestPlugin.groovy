@@ -195,10 +195,10 @@ class DropwizardInttestExtension {
 	def String accTestTaskName = null
 
 	DropwizardInttestExtension validate() {
-		if (Strings.isEmpty(intTestTaskName)) {
+		if (Strings.isBlank(intTestTaskName)) {
 			throw new InvalidUserDataException("The intTestTaskName must not be null/empty")
 		}
-		if (Strings.isEmpty(accTestTaskName)) {
+		if (Strings.isBlank(accTestTaskName)) {
 			throw new InvalidUserDataException("The accTestTaskName must not be null/empty")
 		}
 		return this

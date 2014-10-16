@@ -77,10 +77,10 @@ class DropwizardExtension {
 
 	/** validate the configuration */
 	DropwizardExtension validate(Project project) {
-		if (Strings.isEmpty(mainClass)) {
+		if (Strings.isBlank(mainClass)) {
 			throw new InvalidUserDataException("The mainClass must not be null/empty")
 		}
-		if (Strings.isEmpty(dropwizardConfigFile)) {
+		if (Strings.isBlank(dropwizardConfigFile)) {
 			throw new InvalidUserDataException("The dropwizardConfigFile must not be null/empty")
 		}
 		File cfg = project.file(dropwizardConfigFile)
