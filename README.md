@@ -15,7 +15,7 @@ related work
 ============
 
 * [dropwizard](http://dropwizard.io): Dropwizard itself, obviously
-* [dropwizard-util](https://github.com/stackmagic/dropwizard-util): Various DW utils
+* [dropwizard-utils](https://github.com/stackmagic/dropwizard-utils): Various DW utils
 
 downloading
 ===========
