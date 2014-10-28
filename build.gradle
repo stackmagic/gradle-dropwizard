@@ -5,7 +5,7 @@ apply plugin: 'eclipse'
 
 description = 'Gradle plugin to start/stop dropwizard manually as well as part of a test task and build a runnable jar file'
 group       = 'net.swisstech'
-version     = '1.0.4'
+version     = '1.0.5'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -21,7 +21,7 @@ dependencies {
 	compile gradleApi()
 	compile localGroovy()
 
-	compile 'net.swisstech:swissarmyknife:1.1.0'
+	compile 'net.swisstech:swissarmyknife:1.1.1'
 	compile 'org.slf4j:slf4j-api:1.7.7'
 	compile 'org.yaml:snakeyaml:1.14'
 
