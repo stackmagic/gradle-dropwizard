@@ -152,3 +152,8 @@ todo
 * npn-boot jar version selector util
 * streamline the test task generation
 * make usage of testng vs. junit configurable
+
+known issues
+============
+
+v1.0.5 had (and probably older) a problem that intTest/accTest weren't executed unless you would run build first as in `build intTest accTest`. v1.0.6 solves this so you can run just `intTest accTest`
