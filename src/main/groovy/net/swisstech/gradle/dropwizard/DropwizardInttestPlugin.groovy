@@ -44,11 +44,6 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 
 			DropwizardInttestExtension dwe = project.dropwizard_inttest.validate()
 
-			// the project must have the dropwizard and grakins_service plugin applied
-			// otherwise there's no point in adding dropwizard_integration
-			project.plugins.getPlugin('dropwizard')
-			project.plugins.getPlugin('grakins_service')
-
 			// parse development.yml for urls/ports
 			ext.dwConfig = DropwizardConfigLoader.parse(file(dropwizard.dropwizardConfigFile))
 
