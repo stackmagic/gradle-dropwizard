@@ -54,8 +54,7 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 
 			// the integration and acceptance test setups are identical, make them in a loop
 			// TODO factor all the port stuff out into a util and refine it
-			def theTasks = [ dwe.intTestTaskName, dwe.accTestTaskName ]
-			for (String taskName : theTasks) {
+			[ dwe.intTestTaskName, dwe.accTestTaskName ].each { String taskName ->
 
 				// add a source set, we don't need to bother the user with that
 				// since it's trivial and he doesn't need to do anything special
