@@ -156,4 +156,4 @@ todo
 known issues
 ============
 
-v1.0.5 had (and probably older) a problem that intTest/accTest weren't executed unless you would run build first as in `build intTest accTest`. v1.0.6 solves this so you can run just `intTest accTest`
+v1.0.6 and older had a problem that intTest/accTest were skipped by gradle. v1.0.7 solves this.
