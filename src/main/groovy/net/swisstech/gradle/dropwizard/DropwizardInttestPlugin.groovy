@@ -68,9 +68,6 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 					}
 				}
 
-				// add the compile classpath to eclipse
-				eclipse.classpath.plusConfigurations += [ configurations["${taskName}Compile"] ]
-
 				// actual test task, not much to configure here
 				task(taskName, dependsOn: "${taskName}Classes") {
 					test {
@@ -153,6 +150,13 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 					ProcessUtil.killAndWait(ext."${taskName}Process")
 					LOG.info("server stopped after ${taskName}")
 				}
+
+				// add the compile classpath to eclipse
+				if (project.plugins.hasPlugin('eclipse')) {
+					eclipse.classpath.plusConfigurations += [ configurations["${taskName}Compile"] ]
+				}
+
+
 			} // end for each taskName
 
 			// additionally, we need a shadow jar for the acceptance tests
