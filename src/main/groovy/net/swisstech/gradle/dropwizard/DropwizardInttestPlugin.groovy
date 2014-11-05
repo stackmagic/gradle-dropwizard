@@ -42,7 +42,7 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 
 		project.configure(project) {
 
-			DropwizardInttestExtension dwe = project.dropwizard_inttest.validate()
+			DropwizardInttestExtension dwe = dropwizard_inttest.validate()
 
 			// parse development.yml for urls/ports
 			ext.dwConfig = DropwizardConfigLoader.parse(file(dropwizard.dropwizardConfigFile))
@@ -79,7 +79,7 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 				// start dropwizard before the tests are run, we check and wait
 				// until the ports registered in the yml file are open so we know
 				// dropwizard is up and running!
-				project.tasks[taskName].doFirst {
+				tasks[taskName].doFirst {
 					LOG.info("starting server before ${taskName}")
 
 					// we re-use the commandline from the Dropwizard plugin's dropwizardRun
@@ -137,14 +137,14 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 					ext."${taskName}Process" = process
 				}
 
-				project.tasks[taskName].doLast {
+				tasks[taskName].doLast {
 					LOG.info("stopping server after ${taskName}")
 					ProcessUtil.killAndWait(ext."${taskName}Process")
 					LOG.info("server stopped after ${taskName}")
 				}
 
 				// add the compile classpath to eclipse
-				if (project.plugins.hasPlugin('eclipse')) {
+				if (plugins.hasPlugin('eclipse')) {
 					eclipse.classpath.plusConfigurations += [ configurations["${taskName}Compile"] ]
 				}
 
