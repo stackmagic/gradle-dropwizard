@@ -51,6 +51,11 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 			// TODO factor all the port stuff out into a util and refine it
 			[ dwe.intTestTaskName, dwe.accTestTaskName ].each { String taskName ->
 
+				// unnecessary as long as we're called in 'afterEvaluate'. at that
+				// point the user's buildscript already needs to have the
+				// configuration  or else he can't add dependencies to them.
+				//configurations.maybeCreate("${taskName}Compile")
+
 				// add a source set, we don't need to bother the user with that
 				// since it's trivial and he doesn't need to do anything special
 				sourceSets.create("${taskName}") {
