@@ -56,9 +56,14 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 				sourceSets.create("${taskName}") {
 					java.srcDir(     "src/${taskName}/java")
 					resources.srcDir("src/${taskName}/resources")
-					compileClasspath = sourceSets.main.output + configurations."${taskName}Runtime"
-					runtimeClasspath = output + compileClasspath
+					//compileClasspath = sourceSets.main.output + configurations."${taskName}Runtime"
+					//runtimeClasspath = output + compileClasspath
 				}
+
+				dependencies.add "${taskName}Compile", sourceSets.main.output
+				dependencies.add "${taskName}Compile", configurations.testCompile
+				dependencies.add "${taskName}Compile", sourceSets.test.output
+				dependencies.add "${taskName}Runtime", configurations.testRuntime
 
 				// actual test task, not much to configure here
 				tasks.create("${taskName}", type: Test, dependsOn: "${taskName}Classes") {
