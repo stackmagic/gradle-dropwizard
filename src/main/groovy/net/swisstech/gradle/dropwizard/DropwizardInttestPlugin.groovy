@@ -65,10 +65,8 @@ class DropwizardInttestPlugin implements Plugin<Project> {
 					//runtimeClasspath = output + compileClasspath
 				}
 
+				// we only want the main classes available, don't need the test in intTest/accTest
 				dependencies.add "${taskName}Compile", sourceSets.main.output
-				dependencies.add "${taskName}Compile", configurations.testCompile
-				dependencies.add "${taskName}Compile", sourceSets.test.output
-				dependencies.add "${taskName}Runtime", configurations.testRuntime
 
 				// actual test task, not much to configure here
 				tasks.create("${taskName}", type: Test, dependsOn: "${taskName}Classes") {
