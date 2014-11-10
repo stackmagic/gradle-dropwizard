@@ -103,6 +103,7 @@ bintray {
 		websiteUrl      = "https://github.com/stackmagic/${project.name}"
 		vcsUrl          = "https://github.com/stackmagic/${project.name}.git"
 		issueTrackerUrl = "https://github.com/stackmagic/${project.name}/issues"
+		publicDownloadNumbers = true
 		version {
 			name       = project.version
 			desc       = project.description
