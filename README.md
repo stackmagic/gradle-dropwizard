@@ -42,47 +42,24 @@ buildscript {
 usage
 =====
 
-this project contains 2 plugins
+This plugin will add a `dropwizardRun` task which is similar to `jettyRun`: it starts the server and blocks until interrupted via Ctrl-C. It will also add a `shadowJar` task (reusing the plugin [com.github.johnrengelman.shadow](https://github.com/johnrengelman/shadow/)) to create a shaded jar with merged service files so the jar can be run with `java -jar your.jar`.
 
-Dropwizard
-----------
-
-This plugin will add a `dropwizardRun` task which is similar to `jettyRun`: it starts the server and blocks until interrupted via Ctrl-C.
-It will also add a `shadowJar` task (reusing the plugin [com.github.johnrengelman.shadow](https://github.com/johnrengelman/shadow/))
-to create a shaded jar with merged service files so the jar can be run with `java -jar your.jar`.
-
-SPDY is supported, since this plugin adds the `npn-boot` library to the boot classpath of the dropwizard instance being started. However,
-this feature is not very well tested and it only adds a fairly recent version of the `npn-boot` library and not the one intended for your
-jdk (apparently npn-boot is picky about your jdk version).
+Usage in your project should roughly look like this. See also: [gradle-dropwizard-sample](https://github.com/stackmagic/gradle-dropwizard-sample).
 
 ```groovy
-apply plugin: 'dropwizard'
-dropwizard {
-	mainClass            = 'net.swisstech.DropwizardMain'
-	dropwizardConfigFile = 'development.yml'
-}
-```
 
-DropwizardInttest
------------------
+// you *must* add a configuration for either int/acc tests.
+// the naming must match the config below in the dropwizard closure
 
-This plugin is optional, but requires the Dropwizard plugin to be applied and configured if it is to be used.
-It will add 1-2 new test tasks with user-definable names. These tasks will start dropwizard, then run the tests
-from the appropriate source set and then stop dropwizard again.
-
-If the plugin is applied, the intTests are mandatory, the accTests are optional. The example
-below configures both.
-
-Besides configuring the plugin, you must also add a configuration for the two compile configurations. These are needed
-so you can add the specific integration/acceptance test dependencies you need.
-
-The test tasks are hard-wired to use TestNG.
-
-```groovy
 configurations {
+	// dependency configuration for intTest task (task is added by dropwizard plugin)
 	intTestCompile
+
+	// dependency configuration for accTest task (task is added by dropwizard plugin)
 	accTestCompile
 }
+
+// add your dependencies as usual
 
 dependencies {
 	// normal main classpath
@@ -98,25 +75,43 @@ dependencies {
 	accTestCompile ...
 }
 
-apply plugin: 'dropwizard-inttest'
-dropwizard_inttest {
-	intTestTaskName = 'intTest'
-	accTestTaskName = 'accTest'
+// apply the plugin, enable int/acc tests if desired
+
+apply plugin: 'net.swisstech.dropwizard'
+dropwizard {
+	// your implementation of the dropwizard application class
+	mainClass               = 'net.swisstech.dropwizardsample.Main'
+
+	// the config file to use when running the server manually or as part of the tests
+	dropwizardConfigFile    = 'development.yml'
+
+	// name of the integration tests task, note the matching 'configuration' above.
+	// the tasks are only added when the value is set, if it remains null (the default)
+	// this task will not be added and/or callable
+	integrationTestTaskName = "intTest"
+
+	// name of the acceptance tests task, note the matching 'configuration' above.
+	// the tasks are only added when the value is set, if it remains null (the default)
+	// this task will not be added and/or callable
+	acceptanceTestTaskName  = "accTest"
 }
 ```
 
-Your actual test classes and resources then go into `src/{int|acc}Test/{java|resources}`.
+The plugin will add 1 or 2 new test tasks for integration/acceptance testing with user-definable names. These tasks will start dropwizard, then run the tests from the appropriate source set and then stop dropwizard again. Both, integration and acceptance tests are optional.
 
-The plugin will read your dropwizard yaml config and parse/reconstruct the urls to access your app/admin.
-This information is added to your tests as a java system property. The available properties depend on your actual
-configuration. The maximum available properties are:
+*Please note*: The test tasks are hard-wired to use TestNG.
 
-* DROPWIZARD_APP_HTTP
-* DROPWIZARD_APP_HTTPS
-* DROPWIZARD_APP_SPDY3
-* DROPWIZARD_ADM_HTTP
-* DROPWIZARD_ADM_HTTPS
-* DROPWIZARD_ADM_SPDY3
+Your actual test classes and resources then go into `src/xyzTests/{java|resources}`. Where `xyzTests` corresponds to the
+name of your integration/acceptance tasks.
+
+The plugin will read your dropwizard yaml config and parse/reconstruct the urls to access your app/admin. This information is added to your tests as a java system property. The available properties depend on your actual configuration. The maximum available properties are:
+
+* `DROPWIZARD_APP_HTTP`
+* `DROPWIZARD_APP_HTTPS`
+* `DROPWIZARD_APP_SPDY3`
+* `DROPWIZARD_ADM_HTTP`
+* `DROPWIZARD_ADM_HTTPS`
+* `DROPWIZARD_ADM_SPDY3`
 
 An example test to call the hello-world service from the dropwizard getting started project looks something like this:
 
@@ -146,7 +141,26 @@ public class SomeIntTest {
 }
 ```
 
-The above test would be located in `src/intTest/java/net/swisstech` and can be called trough `gradle intTest`.
+When your `integrationTestTaskName` is configured as `intTest`, then the above test would be located in `src/intTest/java/net/swisstech` and can be called trough `gradle intTest`.
+
+In case acceptance tests are enabled, a fat jar is build from the sourceSet/configuration for your acceptance Tests with the TestNG Main class as the jar's main. Simply add a `testng.xml` like below and you can run `java -jar myproject-acceptance.jar testng.xml`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="mysuite" verbose="2">
+	<test name="myproject">
+		<packages>
+			<package name="myproject.acceptance.*" />
+		</packages>
+	</test>
+</suite>
+```
+
+experimental spdy3 support
+==========================
+
+SPDY3 is supported, since this plugin adds the `npn-boot` library to the boot classpath of the dropwizard instance being started. However, this feature is not very well tested and it only adds a fairly recent version of the `npn-boot` library and not the one intended for your jdk (apparently npn-boot is picky about your jdk version). Use this with caution
 
 todo
 ====
