@@ -144,7 +144,7 @@ class DropwizardPlugin implements Plugin<Project> {
 			tasks."${taskName}".doFirst {
 				LOG.info("starting server before ${taskName}")
 
-				// we re-use the commandline from the Dropwizard plugin's dropwizardRun
+				// we re-use the commandline from the dropwizardRun task
 				def commandLine = tasks['dropwizardRun'].commandLine
 				Process process = ProcessUtil.launch(commandLine, projectDir)
 
