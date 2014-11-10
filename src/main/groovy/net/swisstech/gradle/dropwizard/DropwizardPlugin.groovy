@@ -62,6 +62,17 @@ class DropwizardPlugin implements Plugin<Project> {
 					}
 				}
 			}
+
+			// this is a hack/fix for when the int/acc test configurations are added
+			// to eclipse. we get build/classes/main and build/resources/main as libs
+			// in there which leads to an error in eclise because "main" is a duplicate.
+			// so we remove these
+			if (project.plugins.hasPlugin('eclipse')) {
+				project.eclipse.classpath.file.whenMerged { cp ->
+					def mains = cp.entries.findAll { it.kind.equals("lib") && it.path.endsWith("/main") }
+					cp.entries.removeAll(mains)
+				}
+			}
 		}
 	}
 
