@@ -175,6 +175,7 @@ todo
 * streamline the test task generation
 * make usage of testng vs. junit configurable
 * generate testng.xml and a script or Main wrapper that adds all the urls to the environment the same way as it's already done in the int/acc tests
+* env parameters such as SERVER_VERSION should be configurable and optional
 
 known issues
 ============

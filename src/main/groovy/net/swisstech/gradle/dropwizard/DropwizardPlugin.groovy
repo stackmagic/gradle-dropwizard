@@ -90,9 +90,10 @@ class DropwizardPlugin implements Plugin<Project> {
 
 			// we need to append to the bootclasspath manually because the impl
 			// in JavaExec is buggy: http://gsfn.us/t/4mjt7
-			// we also supply the version parameter here so the development config doesn't need
-			// to specify it. in production, ansible uses the /version servlet to check if the
-			// new version of the service is up and running
+
+			// TODO the SERVER_VERSION is a thing specific to my personal use case and it
+			// should be made configurable via the dropwizard extension
+
 			task('dropwizardRun', type: JavaExec) {
 				workingDir = projectDir
 				classpath  = sourceSets.main.runtimeClasspath
