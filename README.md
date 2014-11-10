@@ -149,7 +149,7 @@ When your `integrationTestTaskName` is configured as `intTest`, then the above t
 acceptance test jar
 ===================
 
-In case acceptance tests are enabled, a fat jar is build from the sourceSet/configuration for your acceptance Tests with the TestNG Main class as the jar's main. Simply add a `testng.xml` like below and you can run `java -jar myproject-acceptance.jar testng.xml`:
+In case acceptance tests are enabled, a fat jar is built from the sourceSet/configuration for your acceptance Tests with the TestNG Main class as the jar's main. Simply add a `testng.xml` like below and you can run `java -jar myproject-acceptance.jar testng.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
