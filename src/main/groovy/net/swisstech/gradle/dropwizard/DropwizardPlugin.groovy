@@ -17,6 +17,15 @@ class DropwizardPlugin implements Plugin<Project> {
 
 	void apply(Project project) {
 
+		if (!"Linux".equals(System.getProperty("os.name"))) {
+			LOG.error("!!!")
+			LOG.error("!!! WARNING: the dropwizard plugin uses some linux specific code, namely java.lang.UNIXProcess")
+			LOG.error("!!! This plugin has only been tested on Debian Linux.")
+			LOG.error("!!!")
+			LOG.error("!!! ... you are entering uncharted territory")
+			LOG.error("!!!")
+		}
+
 		project.extensions.create('dropwizard', DropwizardExtension)
 
 		project.afterEvaluate {
