@@ -17,6 +17,8 @@ related work
 * [dropwizard](http://dropwizard.io): Dropwizard itself, obviously
 * [dropwizard-utils](https://github.com/stackmagic/dropwizard-utils): Various DW utils
 
+For a sample project, have a look at [stackmagic/gradle-dropwizard-sample](https://github.com/stackmagic/gradle-dropwizard-sample)
+
 downloading
 ===========
 
