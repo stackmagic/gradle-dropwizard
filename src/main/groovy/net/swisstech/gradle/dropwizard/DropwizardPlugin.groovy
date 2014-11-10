@@ -34,7 +34,7 @@ class DropwizardPlugin implements Plugin<Project> {
 				throw new InvalidUserDataException("Project Version cannot be null/blank")
 			}
 
-			project.ext.dwConfig = DropwizardConfigLoader.parse(project.dropwizard.dropwizardConfigFile as File)
+			project.ext.dwConfig = DropwizardConfigLoader.parse(project.file(project.dropwizard.dropwizardConfigFile))
 
 			configureProject(project)
 
