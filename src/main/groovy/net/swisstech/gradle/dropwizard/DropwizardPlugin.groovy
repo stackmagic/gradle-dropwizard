@@ -13,6 +13,8 @@ import org.gradle.api.tasks.testing.Test
 /** build shadowed jar and adds a dropwizardRun task to run dropwizard from gradle */
 class DropwizardPlugin implements Plugin<Project> {
 
+	static final Logger LOG = LoggerFactory.getLogger(DropwizardPlugin.class)
+
 	void apply(Project project) {
 
 		project.extensions.create('dropwizard', DropwizardExtension)
