@@ -172,4 +172,4 @@ todo
 known issues
 ============
 
-v1.0.6 and older had a problem that intTest/accTest were skipped by gradle. v1.0.7 solves this.
+* integration and acceptance tests are only run if there's at least 1 test class available in `src/test/java`
