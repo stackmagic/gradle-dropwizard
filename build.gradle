@@ -100,11 +100,14 @@ bintray {
 		name            = project.name
 		desc            = project.description
 		licenses        = [ 'Apache-2.0' ]
-		websiteUrl      = 'https://github.com/stackmagic/gradle-dropwizard'
-		vcsUrl          = 'https://github.com/stackmagic/gradle-dropwizard.git'
-		issueTrackerUrl = 'https://github.com/stackmagic/gradle-dropwizard/issues'
+		websiteUrl      = "https://github.com/stackmagic/${project.name}"
+		vcsUrl          = "https://github.com/stackmagic/${project.name}.git"
+		issueTrackerUrl = "https://github.com/stackmagic/${project.name}/issues"
 		version {
 			name = project.version
+			attributes = [
+				'gradle-plugin': "${project.group}.${project.name - 'gradle-'}:${project.group}:${project.name}"
+			]
 		}
 	}
 }
