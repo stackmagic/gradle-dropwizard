@@ -50,7 +50,7 @@ class DropwizardPlugin implements Plugin<Project> {
 					apply plugin: 'com.github.johnrengelman.shadow'
 					task("${project.dropwizard.acceptanceTestTaskName}ShadowJar", type: Class.forName('com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar')) {
 						// build should depend on us
-						tasks['build'].dependsOn name
+						tasks['assemble'].dependsOn name
 
 						// shadow extends jar, same config
 						classifier = "acceptance"
