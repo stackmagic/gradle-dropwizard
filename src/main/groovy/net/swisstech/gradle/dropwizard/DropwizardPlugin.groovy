@@ -65,6 +65,7 @@ class DropwizardPlugin implements Plugin<Project> {
 		}
 	}
 
+	/** base config of project, always applied */
 	void configureProject(Project project) {
 
 		project.configure(project) {
@@ -113,7 +114,7 @@ class DropwizardPlugin implements Plugin<Project> {
 		}
 	}
 
-
+	/** int/acc test task config, only conditionally applied */
 	void configureTestTask(Project project, String taskName) {
 
 		project.configure(project) {
