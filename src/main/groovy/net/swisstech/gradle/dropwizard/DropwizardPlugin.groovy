@@ -30,17 +30,17 @@ class DropwizardPlugin implements Plugin<Project> {
 			DropwizardExtension dwe = project.dropwizard.validate(project)
 
 			// we need a special classpath just for the
-			configurations {
-				dropwizardRunBootClassPath
-			}
+//			configurations {
+//				dropwizardRunBootClassPath
+//			}
 
-			dependencies {
-				// classpath for dropwizard's jvm's bootclasspath
-				// get the correct npn lib version here:
-				// http://www.eclipse.org/jetty/documentation/current/npn-chapter.html#npn-versions
-				// TODO select correct version based on JVM version (although there seems to be some leeway)
-				dropwizardRunBootClassPath "org.mortbay.jetty.npn:npn-boot:1.1.7.v20140316"
-			}
+//			dependencies {
+//				// classpath for dropwizard's jvm's bootclasspath
+//				// get the correct npn lib version here:
+//				// http://www.eclipse.org/jetty/documentation/current/npn-chapter.html#npn-versions
+//				// TODO select correct version based on JVM version (although there seems to be some leeway)
+//				dropwizardRunBootClassPath "org.mortbay.jetty.npn:npn-boot:1.1.7.v20140316"
+//			}
 
 			// we need to append to the bootclasspath manually because the impl
 			// in JavaExec is buggy: http://gsfn.us/t/4mjt7
@@ -51,7 +51,8 @@ class DropwizardPlugin implements Plugin<Project> {
 				workingDir = projectDir
 				classpath  = sourceSets.main.runtimeClasspath
 				main       = dwe.mainClass
-				jvmArgs    "-Xbootclasspath/a:${configurations.dropwizardRunBootClassPath.asPath}", "-Dgrakins.version=${project.version}"
+//				jvmArgs    "-Xbootclasspath/a:${configurations.dropwizardRunBootClassPath.asPath}", "-Dgrakins.version=${project.version}"
+				jvmArgs    "-Dgrakins.version=${project.version}"
 				args       "server", dwe.dropwizardConfigFile
 			}
 

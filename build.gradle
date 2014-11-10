@@ -5,7 +5,7 @@ apply plugin: 'eclipse'
 
 description = 'Gradle plugin to start/stop dropwizard manually as well as part of a test task and build a runnable jar file'
 group       = 'net.swisstech'
-version     = '1.0.7'
+version     = '1.0.8'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -104,7 +104,8 @@ bintray {
 		vcsUrl          = "https://github.com/stackmagic/${project.name}.git"
 		issueTrackerUrl = "https://github.com/stackmagic/${project.name}/issues"
 		version {
-			name = project.version
+			name       = project.version
+			desc       = project.description
 			attributes = [
 				'gradle-plugin': "${project.group}.${project.name - 'gradle-'}:${project.group}:${project.name}"
 			]
