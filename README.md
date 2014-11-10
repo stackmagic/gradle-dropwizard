@@ -99,12 +99,15 @@ dropwizard {
 
 The plugin will add 1 or 2 new test tasks for integration/acceptance testing with user-definable names. These tasks will start dropwizard, then run the tests from the appropriate source set and then stop dropwizard again. Both, integration and acceptance tests are optional.
 
+writing tests
+=============
+
 *Please note*: The test tasks are hard-wired to use TestNG.
 
-Your actual test classes and resources then go into `src/xyzTests/{java|resources}`. Where `xyzTests` corresponds to the
+Your actual test classes and resources go into `src/xyzTests/{java|resources}`. Where `xyzTests` corresponds to the
 name of your integration/acceptance tasks.
 
-The plugin will read your dropwizard yaml config and parse/reconstruct the urls to access your app/admin. This information is added to your tests as a java system property. The available properties depend on your actual configuration. The maximum available properties are:
+The plugin will read your dropwizard yaml config and parse/reconstruct the urls to access your app/admin ports. This information is added to your tests as a java system property. The available properties depend on your actual configuration. The maximum available properties are:
 
 * `DROPWIZARD_APP_HTTP`
 * `DROPWIZARD_APP_HTTPS`
@@ -143,6 +146,9 @@ public class SomeIntTest {
 
 When your `integrationTestTaskName` is configured as `intTest`, then the above test would be located in `src/intTest/java/net/swisstech` and can be called trough `gradle intTest`.
 
+acceptance test jar
+===================
+
 In case acceptance tests are enabled, a fat jar is build from the sourceSet/configuration for your acceptance Tests with the TestNG Main class as the jar's main. Simply add a `testng.xml` like below and you can run `java -jar myproject-acceptance.jar testng.xml`:
 
 ```xml
@@ -168,6 +174,7 @@ todo
 * npn-boot jar version selector util
 * streamline the test task generation
 * make usage of testng vs. junit configurable
+* generate testng.xml and a script or Main wrapper that adds all the urls to the environment the same way as it's already done in the int/acc tests
 
 known issues
 ============
