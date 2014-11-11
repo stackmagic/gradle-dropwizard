@@ -158,6 +158,10 @@ class DropwizardPlugin implements Plugin<Project> {
 				testClassesDir = sourceSets."${taskName}".output.classesDir
 				classpath      = sourceSets."${taskName}".runtimeClasspath
 
+				// separate report outputs
+				reports.html.enabled     = true
+				reports.html.destination =  file("${buildDir}/reports/${taskName}")
+
 				// print output from the test jvms
 				testLogging.showStandardStreams = true
 
