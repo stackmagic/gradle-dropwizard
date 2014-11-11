@@ -106,7 +106,7 @@ class DropwizardPlugin implements Plugin<Project> {
 			// TODO the SERVER_VERSION is a thing specific to my personal use case and it
 			// should be made configurable via the dropwizard extension
 
-			task('dropwizardRun', type: JavaExec) {
+			task('dropwizardRun', type: JavaExec, dependsOn: "classes") {
 				workingDir = projectDir
 				classpath  = sourceSets.main.runtimeClasspath
 				main       = dropwizard.mainClass
