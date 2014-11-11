@@ -228,6 +228,7 @@ class DropwizardPlugin implements Plugin<Project> {
 				ext."${taskName}Process" = process
 			}
 
+			// kill the server
 			tasks."${taskName}".doLast {
 				LOG.info("stopping server after ${taskName}")
 				ProcessUtil.killAndWait(ext."${taskName}Process")
