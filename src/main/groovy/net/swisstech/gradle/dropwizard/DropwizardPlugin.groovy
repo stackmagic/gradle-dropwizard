@@ -181,50 +181,13 @@ class DropwizardPlugin implements Plugin<Project> {
 				def commandLine = tasks['dropwizardRun'].commandLine
 				Process process = ProcessUtil.launch(commandLine, projectDir)
 
-				Set<Integer> found   = [] as Set
-				long         start   = System.currentTimeMillis()
-				long         maxWait = start + 10000
-				int          pid     = process.pid
+				long start   = System.currentTimeMillis()
 
 				if (dwConfig.ports == null || dwConfig.ports.isEmpty()) {
 					throw new InvalidUserDataException("No port definitions found in ${dropwizardConfigFile}")
 				}
 
-				LOG.info("waiting until all of these ports are open: ${dwConfig.ports}")
-
-				// loop and sleep until all expected ports are open
-				while (true) {
-					for (String port : dwConfig.ports) {
-						def foundPid = "lsof -t -i :${port}".execute().text.trim()
-						if (foundPid != null && foundPid.length() > 0) {
-							found << Integer.parseInt(port)
-						}
-						if (foundPid != null && !foundPid.isEmpty() && foundPid as int != pid) {
-							ProcessUtil.killAndWait(process)
-							throw new InvalidUserDataException("Ports are spread across multiple processes, bailing! Go check out that other process with pid: ${foundPid}!")
-						}
-					}
-
-					LOG.info("Open ports right now: ${found}")
-					if (found.containsAll(dwConfig.ports)) {
-						break
-					}
-
-					try {
-						int rv = process.exitValue()
-						throw new InvalidUserDataException("Dropwizad process exited with exit code ${rv}")
-					}
-					catch (IllegalThreadStateException e) {
-						// ignore, process is still running, all is good
-					}
-
-					if (System.currentTimeMillis() > maxWait) {
-						ProcessUtil.killAndWait(process)
-						throw new InvalidUserDataException("Timeout while waiting for dropwizard to start (was waiting for ports: ${dwConfig.ports})")
-					}
-
-					sleep(50)
-				}
+				PortSnoop.waitForOpenPorts(process, dwConfig.ports, 10000)
 
 				def done = System.currentTimeMillis() - start
 				LOG.info("dropwizard up and running for ${taskName} after ${done} millis")
