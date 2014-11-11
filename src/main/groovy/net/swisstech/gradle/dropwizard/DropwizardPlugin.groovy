@@ -177,29 +177,28 @@ class DropwizardPlugin implements Plugin<Project> {
 			tasks."${taskName}".doFirst {
 				LOG.info("starting server before ${taskName}")
 
-				// we re-use the commandline from the dropwizardRun task
-				def commandLine = tasks['dropwizardRun'].commandLine
-				Process process = ProcessUtil.launch(commandLine, projectDir)
-
-				long start   = System.currentTimeMillis()
-
+				// little sanity check
 				if (dwConfig.ports == null || dwConfig.ports.isEmpty()) {
 					throw new InvalidUserDataException("No port definitions found in ${dropwizardConfigFile}")
 				}
 
-				PortSnoop.waitForOpenPorts(process, dwConfig.ports, 10000)
+				// we re-use the commandline from the dropwizardRun task
+				def commandLine = tasks['dropwizardRun'].commandLine
+				long start      = System.currentTimeMillis()
+
+				ext."${taskName}Process" = BackgroundProcess
+					.launch(commandLine, projectDir)
+					.waitForOpenPorts(dwConfig.ports, 10000)
 
 				def done = System.currentTimeMillis() - start
 				LOG.info("dropwizard up and running for ${taskName} after ${done} millis")
-
-				ext."${taskName}Process" = process
 			}
 
 			// kill the server
 			tasks."${taskName}".doLast {
 				LOG.info("stopping server after ${taskName}")
-				ProcessUtil.killAndWait(ext."${taskName}Process")
-				LOG.info("server stopped after ${taskName}")
+				int rv = ext."${taskName}Process".shutdown()
+				LOG.info("server stopped with exit value ${rv} after ${taskName}")
 			}
 
 			// add the compile classpath to eclipse
