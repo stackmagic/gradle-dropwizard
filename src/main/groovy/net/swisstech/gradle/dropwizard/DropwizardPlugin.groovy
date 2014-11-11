@@ -142,7 +142,7 @@ class DropwizardPlugin implements Plugin<Project> {
 				resources.srcDir("src/${taskName}/resources")
 			}
 
-			// we only want the main classes available, don't need the test in intTest/accTest
+			// we only want the main classes available, don't need the tests in intTest/accTest
 			dependencies.add "${taskName}Compile", sourceSets.main.output
 
 			// actual test task, not much to configure here
