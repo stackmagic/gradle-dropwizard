@@ -5,8 +5,10 @@ gradle-dropwizard
 Gradle plugin to
 
 * start/stop dropwizard manually
-* start/stop dropwizard as part of your integration/acceptance test tasks
+* start/stop dropwizard as part of your integration/acceptance test tasks (these tasks are created by the plugin)
 * build a runnable jar file
+
+> **WARNING**: this plugin has only been tested on Debian/Linux and relies on `java.lang.UNIXProcess`. It is unknown if it works on a Mac but it will most definitely break on Windows! Hack away on your platforms and submit a pull request :)
 
 [ ![TravicCI](https://travis-ci.org/stackmagic/gradle-dropwizard.svg?branch=master) ](https://travis-ci.org/stackmagic/gradle-dropwizard)
 [ ![Download](https://api.bintray.com/packages/stackmagic/maven/gradle-dropwizard/images/download.svg) ](https://bintray.com/stackmagic/maven/gradle-dropwizard/_latestVersion)
@@ -171,13 +173,14 @@ SPDY3 is supported, since this plugin adds the `npn-boot` library to the boot cl
 todo
 ====
 
-* npn-boot jar version selector util
-* streamline the test task generation
-* make usage of testng vs. junit configurable
-* generate testng.xml and a script or Main wrapper that adds all the urls to the environment the same way as it's already done in the int/acc tests
-* env parameters such as SERVER_VERSION should be configurable and optional
+* [ ] npn-boot jar version selector util
+* [ ] make usage of TestNG vs. JUnit configurable (need to investigate if and how we can pass in urls to the tests like TestNG does)
+* [ ] generate testng.xml and a script or Main wrapper that adds all the urls to the environment the same way as it's already done in the int/acc tests so you get a 'portable' jar with a script and can run the acceptance tests on any server as post-deployment tests.
+* [ ] env parameters such as SERVER_VERSION should be configurable and optional
+* [ ] check if this plugin works on mac
+* [ ] make this plugin work on windows
 
 known issues
 ============
 
-* integration and acceptance tests are only run if there's at least 1 test class available in `src/test/java`
+* integration and acceptance tests are only run if there's at least 1 test class available in `src/test/java` so always run `test intTest` or `build intTest` or anything that includes the `test` task before your `intTest` and `accTest` tasks.
