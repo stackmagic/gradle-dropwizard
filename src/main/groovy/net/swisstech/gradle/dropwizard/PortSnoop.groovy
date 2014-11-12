@@ -35,6 +35,11 @@ class PortSnoop {
 				throw new InvalidUserDataException("Ports are spread across multiple processes, bailing! Go check out the involved processes: ${pids}!")
 			}
 
+			if (!pids.isEmpty() && !pids.contains(process.pid)) {
+				ProcessUtil.killAndWait(process)
+				throw new InvalidUserDataException("Port is owned by a different process, bailing! Go check out the other process: ${pids}!")
+			}
+
 			// see if we've got all ports we want
 			Set<Integer> found = portToPid.keySet()
 			if (found.containsAll(ports) && ports.containsAll(found)) {
