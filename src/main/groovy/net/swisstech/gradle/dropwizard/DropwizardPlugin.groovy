@@ -168,9 +168,7 @@ class DropwizardPlugin implements Plugin<Project> {
 				testLogging.showStandardStreams = true
 
 				// add all urls parsed from the config to the environment
-				dwConfig.urls.each {
-					systemProperty(it.key, it.value)
-				}
+				dwConfig.urls.each { systemProperty(it.key, it.value) }
 			}
 
 			// start dropwizard before the tests are run, we check and wait
