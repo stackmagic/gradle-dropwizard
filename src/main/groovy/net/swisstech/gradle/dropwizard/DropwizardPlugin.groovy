@@ -112,8 +112,9 @@ class DropwizardPlugin implements Plugin<Project> {
 				workingDir = projectDir
 				classpath  = sourceSets.main.runtimeClasspath
 				main       = dropwizard.mainClass
-				jvmArgs    "-DSERVER_VERSION=${project.version}", "-Xbootclasspath/a:${configurations.dropwizardRunBootClassPath.asPath}"
+				jvmArgs    "-Xbootclasspath/a:${configurations.dropwizardRunBootClassPath.asPath}"
 				args       "server", dropwizard.dropwizardConfigFile
+				project.dropwizard.jvmArgs.each { jvmArgs it }
 			}
 
 			// fat jar with merged service files
@@ -222,6 +223,12 @@ class DropwizardExtension {
 
 	/** acceptance tests will be configured if set */
 	def String acceptanceTestTaskName = null
+
+	/**
+	 * list of jvmArgs to be added, same semantics as JavaExec.jvmArgs(), put your args including '-D' and everything there
+	 * @since 1.1.6
+	 */
+	def List<String> jvmArgs = []
 
 	/** validate the configuration */
 	DropwizardExtension validate(Project project) {
