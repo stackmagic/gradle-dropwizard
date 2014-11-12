@@ -3,6 +3,8 @@ package net.swisstech.gradle.dropwizard
 import static net.swisstech.swissarmyknife.lang.Strings.isBlank
 import static net.swisstech.swissarmyknife.lang.Strings.isNotBlank
 
+import net.swisstech.swissarmyknife.sys.linux.BackgroundProcess
+
 import org.slf4j.*
 
 import org.gradle.api.*
