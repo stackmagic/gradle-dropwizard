@@ -77,7 +77,10 @@ dependencies {
 	accTestCompile ...
 }
 
-// apply the plugin, enable int/acc tests if desired
+// redis port (exemplary for starting more processes, see also further belo)
+ext.redisPort = 63000
+
+// apply the plugin, enable int/acc tests by assigning a name, if desired
 
 apply plugin: 'net.swisstech.dropwizard'
 dropwizard {
@@ -96,6 +99,44 @@ dropwizard {
 	// the tasks are only added when the value is set, if it remains null (the default)
 	// this task will not be added and/or callable
 	acceptanceTestTaskName  = "accTest"
+
+	// list of jvmArgs to be added, same semantics as JavaExec.jvmArgs(), put your args
+	// including '-D' and everything there
+	// added in dropwizard-gradle 1.1.6
+	jvmArgs                 = [
+		  "-DSERVER_VERSION=${project.version}"
+		, "-DREDIS_PORT=${project.redisPort}"
+	]
+}
+
+// run in afterEvaluate since the plugin does the same, plus this must be
+// run after the plugin has done it's thing.
+// this example uses 2 start/stop tasks so each kind of test would start
+// off with a fresh redis instance. if you are fine witch 1 instance for
+// both then ditch one of the start and stop tasks and change the dependsOn
+// and finalizedBy declarations
+afterEvaluate {
+	task "intRedisStart" << {
+		project.ext.intRedisProcess = net.swisstech.swissarmyknife.sys.linux.BackgroundProcess
+			.launch([ 'redis-server', '--port', project.redisPort as String ], null)
+			.waitForOpenPorts([ project.redisPort ], 10000)
+	}
+	task "intRedisStop" << {
+		project.intRedisProcess.shutdown()
+	}
+	tasks.intTest.dependsOn("intRedisStart")
+	tasks.intTest.finalizedBy("intRedisStop")
+
+	task "accRedisStart" << {
+		project.ext.accRedisProcess = net.swisstech.swissarmyknife.sys.linux.BackgroundProcess
+			.launch([ 'redis-server', '--port', project.redisPort as String ], null)
+			.waitForOpenPorts([ project.redisPort ], 10000)
+	}
+	task "accRedisStop" << {
+		project.accRedisProcess.shutdown()
+	}
+	tasks.accTest.dependsOn("accRedisStart")
+	tasks.accTest.finalizedBy("accRedisStop")
 }
 ```
 
