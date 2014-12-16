@@ -199,7 +199,12 @@ class DropwizardPlugin implements Plugin<Project> {
 			// kill the server
 			task("${taskName}Finalizer") << {
 				LOG.info("stopping server after ${taskName}")
-				def process = project."${taskName}Process"
+				def process = null
+				try {
+					process = project."${taskName}Process"
+				}
+				catch (MissingPropertyException e) {}
+
 				if (process) {
 					int rv = process.shutdown()
 					LOG.info("server stopped with exit value ${rv} after ${taskName}")
