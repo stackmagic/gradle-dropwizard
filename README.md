@@ -36,7 +36,7 @@ buildscript {
     }
 
     dependencies {
-        compile 'net.swisstech:gradle-dropwizard:+'
+        classpath 'net.swisstech:gradle-dropwizard:+'
     }
 }
 ```
