@@ -209,7 +209,7 @@ In case acceptance tests are enabled, a fat jar is built from the sourceSet/conf
 experimental spdy3 support
 ==========================
 
-SPDY3 is supported, since this plugin adds the `npn-boot` library to the boot classpath of the dropwizard instance being started. However, this feature is not very well tested and it only adds a fairly recent version of the `npn-boot` library and not the one intended for your jdk (apparently npn-boot is picky about your jdk version). Use this with caution
+SPDY3 is supported, since this plugin adds the `npn-boot` library to the boot classpath of the dropwizard instance being started. However, this feature is not very well tested and it only adds a fairly recent version of the `npn-boot` library and not the one intended for your jdk (apparently npn-boot is picky about your jdk version). *Use this with caution*.
 
 todo
 ====
@@ -217,9 +217,9 @@ todo
 * [ ] npn-boot jar version selector util
 * [ ] make usage of TestNG vs. JUnit configurable (need to investigate if and how we can pass in urls to the tests like TestNG does)
 * [ ] generate testng.xml and a script or Main wrapper that adds all the urls to the environment the same way as it's already done in the int/acc tests so you get a 'portable' jar with a script and can run the acceptance tests on any server as post-deployment tests.
-* [ ] env parameters such as SERVER_VERSION should be configurable and optional
 * [ ] check if this plugin works on mac
 * [ ] make this plugin work on windows
+* [X] env parameters such as SERVER_VERSION should be configurable and optional
 
 known issues
 ============
