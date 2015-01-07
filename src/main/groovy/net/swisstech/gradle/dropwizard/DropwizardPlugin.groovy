@@ -171,6 +171,12 @@ class DropwizardPlugin implements Plugin<Project> {
 
 				// add all urls parsed from the config to the environment
 				dwConfig.urls.each { systemProperty(it.key, it.value) }
+
+				// add all jvm args to test vm
+				project.dropwizard.jvmArgs.each {
+					String[] x = it.split("=")
+					systemProperty(x[0] - "-D", x[1])
+				}
 			}
 
 			// start dropwizard before the tests are run, we check and wait
