@@ -61,6 +61,11 @@ class DropwizardPlugin implements Plugin<Project> {
 							mergeServiceFiles()
 							attributes 'Main-Class': 'org.testng.TestNG'
 						}
+
+						// remove signatures etc
+						exclude 'META-INF/*.SF'
+						exclude 'META-INF/*.DSA'
+						exclude 'META-INF/*.RSA'
 					}
 				}
 			}
